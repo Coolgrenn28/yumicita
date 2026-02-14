@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Carta para mi chiquita</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      overflow: hidden;
+      font-family: 'Great Vibes', cursive;
+      color: white;
+      height: 100vh;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: black;
+    }
+
+    .pantalla {
+      display: none;
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 2;
+      color: white;
+    }
+
+    .visible {
+      display: flex !important;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 24px;
+      background: #ff1493;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: 'Great Vibes', cursive;
+      box-shadow: 0 0 10px #ff1493;
+      transition: background 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background: #ff69b4;
+    }
+
+    input[type="password"] {
+      padding: 12px;
+      font-size: 22px;
+      border: 2px solid #ff69b4;
+      border-radius: 12px;
+      background: black;
+      color: white;
+      box-shadow: 0 0 15px #ff1493;
+      outline: none;
+      margin: 15px 0;
+      text-align: center;
+    }
+
+    #candado div {
+      font-size: 24px;
+      color: #ff1493;
+      margin-bottom: 15px;
+      font-family: 'Arial Black', Arial, sans-serif;
+      text-shadow: 0 0 10px #ff1493;
+    }
+
+    .barra-carga {
+      width: 80%;
+      height: 28px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      margin: 20px 0;
+      box-shadow: 0 0 10px hotpink;
+    }
+
+    .barra-carga > div {
+      height: 100%;
+      width: 0%;
+      background: #ff1493;
+      animation: llenar 2s linear forwards;
+    }
+
+    @keyframes llenar {
+      to { width: 100%; }
+    }
+
+    #cartaTexto {
+      max-width: 90%;
+      max-height: 90vh;
+      font-size: 24px;
+      overflow-y: auto;
+      padding: 20px;
+      color: white;
+      text-shadow: 1px 1px 4px hotpink;
+      font-family: 'Great Vibes', cursive;
+      line-height: 1.6;
+      background: rgba(0,0,0,0.7);
+      border-radius: 15px;
+    }
+
+    .teAmoMatrix {
+      position: absolute;
+      font-size: 18px;
+      color: #ffb6c1;
+      opacity: 0.6;
+      animation: matrixFall 5s linear infinite;
+      z-index: 0;
+      font-family: monospace;
+    }
+
+    @keyframes matrixFall {
+      0% { top: -50px; opacity: 0.6; }
+      100% { top: 100vh; opacity: 0; }
+    }
+
+    .emojiTriste {
+      position: absolute;
+      font-size: 30px;
+      opacity: 0.4;
+      animation: flotarTriste 5s infinite ease-in-out;
+    }
+
+    @keyframes flotarTriste {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(15px); }
+      100% { transform: translateY(0); }
+    }
+
+    #emojiLlorando {
+      font-size: 80px;
+      animation: llorar 2s infinite ease-in-out;
+      margin-top: 20px;
+    }
+
+    @keyframes llorar {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(10px); }
+    }
+
+    h1 {
+      font-size: 40px;
+      color: pink;
+      text-shadow: 0 0 15px #ff1493;
+      margin-bottom: 25px;
+    }
+  </style>
+  <link rel="icon" href="https://www.freeiconspng.com/uploads/heart-love-png-33.png" type="image/png">
+</head>
+<body>
+
+<canvas id="matrixCanvas"></canvas>
+
+<div id="inicio" class="pantalla visible">
+  <button onclick="reproducirMusica()">🎵 Reproducir música</button>
+</div>
+
+<div id="candado" class="pantalla">
+  <div>Posible contraseña: cuando te pedi ser mi novia</div>
+  <input id="password" type="password" placeholder="Ingresa la contraseña" />
+  <button onclick="verificar()">Entrar</button>
+</div>
+
+<div id="carga" class="pantalla">
+  <div class="barra-carga"><div></div></div>
+</div>
+
+<div id="confirmacion" class="pantalla">
+  <div style="font-size: 26px; margin-bottom: 15px;">¿Estás segura de continuar?</div>
+  <button onclick="mostrarCarta()">Sí</button>
+  <button onclick="confirmarNo()">No</button>
+</div>
+
+<div id="confirmarNo2" class="pantalla">
+  <div style="font-size: 26px; margin-bottom: 15px;">¿Estás completamente segura?</div>
+  <button onclick="mostrarCarta()">Sí</button>
+  <button onclick="mostrarFinalTriste()">No</button>
+</div>
+
+<div id="carta" class="pantalla">
+  <div id="cartaTexto">
+    <h1>Carta para Mi Chiquita, Mi Princesa Hermosa, Mi Mundo :3</h1>
+    Solo quiero tomarme un momento para decirte gracias.<br><br>
+    Desde que llegaste a mi vida, todo cambió. Ya no soy el mismo, porque ahora camino por este mundo con tu nombre en el alma.<br><br>
+    Gracias por llegar a mi vida cuando menos lo esperaba y cambiarla de una manera tan hermosa.<br><br>
+    Estos 6 meses contigo han sido, sin duda, lo mejor que me ha pasado.<br><br>
+    Desde que estás a mi lado, mis días son más felices, más ligeros y mucho más especiales.<br><br>
+    Tu forma de ser, tu sonrisa y todo lo que compartimos hacen que cada momento valga la pena.<br><br>
+    Me has enseñado lo bonito que es querer y sentirse querido de verdad.<br><br>
+    Gracias por tu paciencia, por tu cariño y por cada pequeño detalle.<br><br>
+    No sabes lo afortunado que me siento de tenerte conmigo. <br><br>
+    Siempre sere tuyo linda 💕 
+    <p></p>
+    Mira nosotros :3
+  </div>
+  <div >
+    <img src="https://i.pinimg.com/736x/4c/52/f0/4c52f0f08413ef559ce426bd51e5e040.jpg" alt="Nosotros" style="width: 50%; max-width: 400px; margin-top: 20px; border-radius: 15px; box-shadow: 0 0 15px hotpink;">
+  </div>
+</div>
+
+<div id="finalTriste" class="pantalla" style="flex-direction: column;">
+  <div style="font-size: 30px; color: white; margin-bottom: 20px;">Está bien...</div>
+  <div id="emojiLlorando">😭</div>
+</div>
+
+<audio id="musica" src="musica/Juanes - Es Por Ti (Letra).mp3" preload="auto"></audio>
+
+<script>
+  const canvas = document.getElementById("matrixCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.height = window.innerHeight;
+  canvas.width = window.innerWidth;
+
+  const matrixChars = "0123456789";
+  const fontSize = 16;
+  const columns = Math.floor(canvas.width / fontSize);
+  const drops = Array(columns).fill(1);
+
+  function drawMatrix() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "#ff1493";
+    ctx.font = fontSize + "px monospace";
+
+    for (let i = 0; i < drops.length; i++) {
+      const text = matrixChars.charAt(Math.floor(Math.random() * matrixChars.length));
+      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+      drops[i]++;
+      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        drops[i] = 0;
+      }
+    }
+  }
+
+  let matrixInterval = setInterval(drawMatrix, 50);
+
+  function reproducirMusica() {
+    const audio = document.getElementById("musica");
+    audio.play().catch(() => {
+      alert("Presiona el botón nuevamente para reproducir la música.");
+    });
+    mostrarPantalla("candado");
+  }
+
+  function verificar() {
+    const pass = document.getElementById("password").value.trim();
+    if (pass === "14 de agosto") {
+      clearInterval(matrixInterval);
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      mostrarPantalla("carga");
+      const barra = document.querySelector(".barra-carga > div");
+      barra.style.width = "0%";
+      barra.style.animation = "llenar 2s linear forwards";
+      setTimeout(() => {
+        mostrarPantalla("confirmacion");
+      }, 2000);
+    } else {
+      alert("Contraseña incorrecta :(");
+    }
+  }
+
+  function mostrarPantalla(id) {
+    document.querySelectorAll(".pantalla").forEach(p => p.classList.remove("visible"));
+    document.getElementById(id).classList.add("visible");
+  }
+
+  function mostrarCarta() {
+    mostrarPantalla("carta");
+    setInterval(() => {
+      for (let i = 0; i < 20; i++) {
+        const texto = document.createElement("div");
+        texto.className = "teAmoMatrix";
+        texto.innerText = "Te amo ❤️";
+        texto.style.left = Math.random() * 100 + "vw";
+        texto.style.top = "-30px";
+        texto.style.fontSize = Math.random() * 18 + 14 + "px";
+        texto.style.opacity = Math.random() * 0.4 + 0.3;
+        texto.style.animationDuration = (Math.random() * 4 + 4) + "s";
+        document.body.appendChild(texto);
+        setTimeout(() => texto.remove(), 10000);
+      }
+    }, 2000);
+  }
+
+  function confirmarNo() {
+    mostrarPantalla("confirmarNo2");
+  }
+
+  function mostrarFinalTriste() {
+    mostrarPantalla("finalTriste");
+    for (let i = 0; i < 30; i++) {
+      const emoji = document.createElement("div");
+      emoji.className = "emojiTriste";
+      emoji.innerText = "😢";
+      emoji.style.left = Math.random() * 100 + "vw";
+      emoji.style.top = Math.random() * 100 + "vh";
+      document.body.appendChild(emoji);
+    }
+  }
+</script>
+
+</body>
+</html>
